@@ -4,15 +4,25 @@ using UnityEngine;
 
 public class RectTransform : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject boxPrefab;
+    //public Transform boxPos;
+    
     void Start()
     {
-        
+        //boxPrefab = Resources.Load<GameObject>("Box");
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
-        
+        //CreateBox();
+    }
+
+    public void CreateBox()
+    {
+        //GameObject Box = Instantiate(boxPrefab);
+
+        //RectTransform images = Box.GetComponent<RectTransform>();
+        //Box.transform.position = gameObject.transform.position;
     }
 }

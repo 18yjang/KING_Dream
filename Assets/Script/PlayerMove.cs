@@ -17,23 +17,22 @@ public class PlayerMove : MonoBehaviour
     
     void Update()
     {
-        //Debug.Log(rotation);
+        
     }
 
     public void OnTouchButton(string button)
     {
         switch (button)
         {
-            case "Left": rotation = 1; Debug.Log(rotation);
+            case "Left": rotation = 1; 
                 break;
-            case "Right": rotation = 2; Debug.Log(rotation);
+            case "Right": rotation = 2;
                 break;
-            case "Up": rotation = 3; Debug.Log(rotation);
+            case "Up": rotation = 3; 
                 break;
-            case "Down": rotation = 4; Debug.Log(rotation);
+            case "Down": rotation = 4; 
                 break;
             case "Go":
-                Debug.Log(rotation);
                 if (rotation == 1) Player.GetComponent<ConstantForce2D>().force = new Vector2(-1, 0);
                 else if (rotation == 2) Player.GetComponent<ConstantForce2D>().force = new Vector2(1, 0);
                 else if (rotation == 4) Player.GetComponent<ConstantForce2D>().force = new Vector2(0, -1);
