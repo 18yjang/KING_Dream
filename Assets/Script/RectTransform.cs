@@ -1,15 +1,16 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class RectTransform : MonoBehaviour
 {
-    public GameObject boxPrefab;
-    //public Transform boxPos;
-    
+    Transform vec;
+   
     void Start()
     {
-        //boxPrefab = Resources.Load<GameObject>("Box");
+       // vec = new Vector2(0,0);
+        CreateBox();
     }
 
     
@@ -20,9 +21,15 @@ public class RectTransform : MonoBehaviour
 
     public void CreateBox()
     {
-        //GameObject Box = Instantiate(boxPrefab);
+        //GameObject box;
+        var box = Instantiate(Resources.Load("Prefab/Box"), new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.identity);
+        box.name = this.name;
+        //box.transform.position = new Vector3(0, 0, 0);
 
-        //RectTransform images = Box.GetComponent<RectTransform>();
-        //Box.transform.position = gameObject.transform.position;
     }
+
+    /*private Vector3 Vector3(float x, float y, float z)
+    {
+        transform.position = new Vector3(x, y, z);
+    }*/
 }
