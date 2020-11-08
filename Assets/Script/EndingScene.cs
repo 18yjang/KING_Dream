@@ -45,6 +45,9 @@ public class EndingScene : MonoBehaviour
         {
             textUI.SetActive(false);
             StartCoroutine(fadeOut(Leo));
+            Lisa.SetActive(false);
+            //Abg.gameObject.SetActive(true);
+            StartCoroutine(display(Abg));
         }
         else if (!isTyping)
         {
