@@ -152,18 +152,19 @@ public class PlayerMove : MonoBehaviour
         //newPosition = Player.transform.position;
 
 
-        if (drawLine.line.positionCount > 3)
+
+
+        if (collision.gameObject.tag == "Wall")
         {
+            float[] x = new float[4], y = new float[4];
 
-            if(collision.gameObject.tag == "Wall")
+            for (int i = 0; i < 4; i++)
             {
-                float[] x = new float[4], y = new float[4];
+                x[i] = drawLine.colliderpoints[i].x ;
+                y[i] = drawLine.colliderpoints[i].y;
+            }
 
-                for (int i = 0; i < 4; i++)
-                {
-                    drawLine.colliderpoints[i].x = x[i];
-                    drawLine.colliderpoints[i].y = y[i];
-                }
+            
 
                 float xCoor, yCoor, xLen, yLen, smallx, bigy;
                 xCoor = Math.Abs(x[1] - x[3]);
@@ -172,11 +173,11 @@ public class PlayerMove : MonoBehaviour
                 if (x[1] < x[3]) smallx = x[1]; else smallx = x[3];
                 if (y[1] > y[3]) bigy = y[1]; else bigy = y[3];
 
-                xLen = smallx + xCoor;
-                yLen = bigy + yCoor;
+                //xLen = smallx + xCoor;
+                //yLen = bigy + yCoor;
+                Debug.Log("xCoor :" + xCoor+ "yCoor : " +yCoor + "smallx : "+smallx+"bigy: "+bigy);
 
-
-                rectTrans.CreateImage(new Vector2(xCoor, yCoor), xLen, yLen);
+                rectTrans.CreateImage(new Vector2(smallx, bigy), xCoor , yCoor);
 
                 //rectTrans.CreateImage();
                 /*************************CreateImage*********************************/
@@ -202,7 +203,7 @@ public class PlayerMove : MonoBehaviour
         
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    /*private void OnTriggerEnter2D(Collider2D collision)
     {
         if(drawLine.line.positionCount%4 == 0) {
             float[] x = new float[4], y = new float[4];
@@ -235,9 +236,8 @@ public class PlayerMove : MonoBehaviour
 
 
 
-            /*                  안쓰는것                  */
+            /*                  안쓰는것                
             //prevPosition = Vector2.zero;
             //newPosition = Vector2.zero;
-        }
-    }
-}
+        }*/
+   
