@@ -47,7 +47,10 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        
+        if(starPoint == 2)
+        {
+            SceneManager.LoadScene("HiddenPictureScene");
+        }
     }
 
     public void OnStarTouch(int starNum)
@@ -80,6 +83,10 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Time.timeScale = 1;
 
+        }
+        else if (where.Equals("goon"))
+        {
+            SceneManager.LoadScene("HiddenPictureScene");
         }
     }
 }

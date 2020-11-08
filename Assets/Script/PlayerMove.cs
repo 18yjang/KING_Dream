@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -84,7 +86,8 @@ public class PlayerMove : MonoBehaviour
                     Player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                     drawLine.pointNum++;
                     drawLine.line.positionCount = drawLine.pointNum + 1;
-                    Left.enabled = false;
+                drawLine.line.SetPosition(drawLine.pointNum + 1, Player.transform.position);
+                Left.enabled = false;
                     Right.enabled = false;
                     usedButton[BtnIndex] = "Left";
                     BtnIndex++;
@@ -95,7 +98,8 @@ public class PlayerMove : MonoBehaviour
                     Player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
                     drawLine.pointNum++;
                     drawLine.line.positionCount = drawLine.pointNum + 1;
-                    Left.enabled = false;
+                drawLine.line.SetPosition(drawLine.pointNum + 1, Player.transform.position);
+                Left.enabled = false;
                     Right.enabled = false;
                     usedButton[BtnIndex] = "Right";
                     BtnIndex++;
@@ -106,7 +110,8 @@ public class PlayerMove : MonoBehaviour
                     Player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                     drawLine.pointNum++;
                     drawLine.line.positionCount = drawLine.pointNum + 1;
-                    Down.enabled = false;
+                drawLine.line.SetPosition(drawLine.pointNum + 1, Player.transform.position);
+                Down.enabled = false;
                     Up.enabled = false;
                     usedButton[BtnIndex] = "Up";
                     BtnIndex++;
@@ -117,6 +122,7 @@ public class PlayerMove : MonoBehaviour
                     Player.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
                     drawLine.pointNum++;
                     drawLine.line.positionCount = drawLine.pointNum + 1;
+                    drawLine.line.SetPosition(drawLine.pointNum+1, Player.transform.position);
                     Down.enabled = false;
                     Up.enabled = false;
                     usedButton[BtnIndex] = "Down";
@@ -129,7 +135,12 @@ public class PlayerMove : MonoBehaviour
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        Player.GetComponent<ConstantForce2D>().force = Vector2.zero;
+        if(collision.gameObject.tag == "Enemy")
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+            Player.GetComponent<ConstantForce2D>().force = Vector2.zero;
         Player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         drawLine.line.SetPosition(drawLine.pointNum-1, Player.transform.position);
 
@@ -141,36 +152,42 @@ public class PlayerMove : MonoBehaviour
         //newPosition = Player.transform.position;
 
 
-        if (drawLine.line.positionCount > 3)
+
+
+        if (collision.gameObject.tag == "Wall")
         {
+            float[] x = new float[4], y = new float[4];
 
-            if (collision.gameObject.tag == "Line")
+            for (int i = 0; i < 4; i++)
             {
-                rectTrans.CreateImage();   
-                /****************************************CreateImage*********************************/
-                // 충돌좌표(ex. 6)+ 5, 4, 3 좌표 4개로 박스 넣기. 좌표는(x+(x1-x2)/2 , y+(y1-y2)/2)
-                // Instantiate(Resources.Load("Prefab/Image")) - image instantiate
-                // transform.parent = "Canvas"
-                // transform.scale = new Vector2(x좌표 빼고/2+x, 좌표 빼고/2+X)     혹은 width랑 height 설정하기. (좌표들 뺀값만)
-                // boxCollider2D.transform.size = RectTransform.width & Height
-                
-
-
-                             /*                  안쓰는것                  */
-                                //prevPosition = Vector2.zero;
-                                //newPosition = Vector2.zero;
+                x[i] = drawLine.colliderpoints[i].x ;
+                y[i] = drawLine.colliderpoints[i].y;
             }
-            if(collision.gameObject.tag == "Wall")
-            {
-                rectTrans.CreateImage();
+
+            
+
+                float xCoor, yCoor, xLen, yLen, smallx, bigy;
+                xCoor = Math.Abs(x[1] - x[3]);
+                yCoor = Math.Abs(y[1] - y[3]);
+
+                if (x[1] < x[3]) smallx = x[1]; else smallx = x[3];
+                if (y[1] > y[3]) bigy = y[1]; else bigy = y[3];
+
+                //xLen = smallx + xCoor;
+                //yLen = bigy + yCoor;
+                Debug.Log("xCoor :" + xCoor+ "yCoor : " +yCoor + "smallx : "+smallx+"bigy: "+bigy);
+
+                rectTrans.CreateImage(new Vector2(smallx, bigy), xCoor , yCoor);
+
+                //rectTrans.CreateImage();
                 /*************************CreateImage*********************************/
                 // 좌표계 4개, 각 x와 y 비교.
                 // x랑 y좌표 모두(&&) 틀린경우, 그 두 점 저장.
                 // 모든 Image의 좌표 위치 List로 저장해두기.
                 // 임의의 6개 좌표 저장하기. (x,y) 6세트.
                 // Image의 위치 + 높이 혹은 넓이/2 가 좌표 점과 동일하면, Image의 위치 + 넓이 혹은 높이/2 를 뺀 값 * 주어진 좌표들의 값 = 넓이.
-                rectTrans.CreateImage();
-                
+                //rectTrans.CreateImage();
+
                 //drawLine.colliderpoints.Clear();
             }
 
@@ -185,4 +202,42 @@ public class PlayerMove : MonoBehaviour
         }
         
     }
-}
+
+    /*private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(drawLine.line.positionCount%4 == 0) {
+            float[] x = new float[4], y = new float[4];
+
+            for(int i = 0; i<4; i++)
+            {
+                drawLine.colliderpoints[i].x = x[i];
+                drawLine.colliderpoints[i].y = y[i];
+            }
+
+            float xCoor, yCoor, xLen, yLen, smallx, bigy;
+            xCoor = Math.Abs(x[1] - x[3]);
+            yCoor = Math.Abs(y[1] - y[3]);
+
+            if (x[1] < x[3]) smallx = x[1]; else smallx = x[3];
+            if (y[1] > y[3]) bigy = y[1]; else bigy = y[3];
+
+            xLen = smallx + xCoor;
+            yLen = bigy + yCoor; 
+            
+
+            rectTrans.CreateImage(new Vector2(xCoor,yCoor), xLen, yLen);
+
+            /****************************************CreateImage*********************************/
+            // 충돌좌표(ex. 6)+ 5, 4, 3 좌표 4개로 박스 넣기. 좌표는(x+(x1-x2)/2 , y+(y1-y2)/2)
+            // Instantiate(Resources.Load("Prefab/Image")) - image instantiate
+            // transform.parent = "Canvas"
+            // transform.scale = new Vector2(x좌표 빼고/2+x, 좌표 빼고/2+X)     혹은 width랑 height 설정하기. (좌표들 뺀값만)
+            // boxCollider2D.transform.size = RectTransform.width & Height
+
+
+
+            /*                  안쓰는것                
+            //prevPosition = Vector2.zero;
+            //newPosition = Vector2.zero;
+        }*/
+   

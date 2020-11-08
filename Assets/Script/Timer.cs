@@ -12,6 +12,8 @@ public class Timer : MonoBehaviour
     float currentTime;
     float startingTime;
     public GameObject retry;
+    public GameObject goOn;
+    public GameManager gameManager;
 
     void Start()
     {
@@ -26,7 +28,8 @@ public class Timer : MonoBehaviour
 
         if (currentTime <= 0)  // 완전 0 불가능
         {
-            retry.SetActive(true);
+            if (gameManager.starPoint == 0) retry.SetActive(true);
+            else if (gameManager.starPoint == 1) goOn.SetActive(true);
             
             currentTime = 90;
             Time.timeScale = 0;

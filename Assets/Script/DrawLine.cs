@@ -9,8 +9,8 @@ public class DrawLine : MonoBehaviour
     public int pointNum;
     public LineRenderer line;
     public EdgeCollider2D lineCollider;
-    //public List<Vector2> colliderpoints = new List<Vector2>();
-    public Vector2[] colliderPoint = new Vector2[4];
+    public Vector2[] colliderpoints;
+
     public Vector2 prevPosition;
 
 
@@ -26,29 +26,22 @@ public class DrawLine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*for (int index = 0; index < colliderpoints.Count; index++)
-        {
-            lineCollider.points[index] = colliderpoints[index - 1];
-        }*/
+        
     }
 
     public void Draw()
     {
-        line.positionCount = pointNum;
+        line.positionCount = pointNum+1;
+        line.SetPosition(pointNum-1, Player.transform.position);
 
-        Vector2[] colliderpoints;
+        
         colliderpoints = lineCollider.points;
-        colliderpoints[pointNum] =new Vector2((float)(Player.transform.position.x+0.1), (float)(Player.transform.position.y+0.1));
+        for (int i = pointNum%4; i < 4; i++)
+            colliderpoints[i] =new Vector2((float)(Player.transform.position.x+0.1), (float)(Player.transform.position.y+0.1));
         lineCollider.points = colliderpoints;
 
-        Debug.Log("I'm here!");
-        //if (pointNum>0) lineCollider.points[pointNum-1] = colliderpoints[pointNum];
-
         line.SetPosition(pointNum, Player.transform.position);
-           // colliderpoints.Add(Player.transform.position);
-            
-      
         
-        //pointNum++;
+       
     }
 }
