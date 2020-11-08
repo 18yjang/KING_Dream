@@ -146,6 +146,7 @@ public class PlayerMove : MonoBehaviour
 
             if (collision.gameObject.tag == "Line")
             {
+                rectTrans.CreateImage();   
                 /****************************************CreateImage*********************************/
                 // 충돌좌표(ex. 6)+ 5, 4, 3 좌표 4개로 박스 넣기. 좌표는(x+(x1-x2)/2 , y+(y1-y2)/2)
                 // Instantiate(Resources.Load("Prefab/Image")) - image instantiate
@@ -161,6 +162,7 @@ public class PlayerMove : MonoBehaviour
             }
             if(collision.gameObject.tag == "Wall")
             {
+                rectTrans.CreateImage();
                 /*************************CreateImage*********************************/
                 // 좌표계 4개, 각 x와 y 비교.
                 // x랑 y좌표 모두(&&) 틀린경우, 그 두 점 저장.

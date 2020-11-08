@@ -22,7 +22,11 @@ public class RectTrans : MonoBehaviour
     public void CreateImage()
     {
         GameObject img = Instantiate((GameObject)Resources.Load("Prefab/Image"));
-        img.transform.localPosition = new Vector2(3, 5);
+        img.transform.localPosition = new Vector2(300, 500);
+        img.GetComponent<Transform>().SetParent(GameObject.Find("Canvas/BackGround").GetComponent<Transform>());
+        img.GetComponent<Transform>().localScale = new Vector2(50, 50);
+
+
         //GameObject box = Instantiate(Resources.Load("Prefab/Image"), drawLine.colliderpoints[2], Quaternion.identity) as GameObject;
         Debug.Log("Im here!");
         //box.transform.parent = GameObject.Find("Canvas").transform;

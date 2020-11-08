@@ -46,12 +46,13 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        ScriptTxt.GetComponent<Text>().text = starPoint.ToString();
+        
     }
 
     public void OnStarTouch(int starNum)
     {
         starPoint++;
+        ScriptTxt.GetComponent<Text>().text = starPoint.ToString();
         if (starNum == 1)
             Destroy(star1);
         else
@@ -72,6 +73,8 @@ public class GameManager : MonoBehaviour
         {
             // 같은 씬 재로딩
             SceneManager.LoadScene("GamePlay1");
+            Time.timeScale = 1;
+
         }
     }
 }
