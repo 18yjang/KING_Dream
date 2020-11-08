@@ -9,7 +9,8 @@ public class StartScene : MonoBehaviour
 {
     public Image Lisa, Lisa_disable, Leo;
 
-    public AudioSource backMusic;
+    public AudioClip[] intro_music;
+    AudioSource soundSource;
     public Slider backVolume;
     private float backVol = 1f;
 
@@ -17,13 +18,19 @@ public class StartScene : MonoBehaviour
     public string[] introString;
     public Text nameText, introText;
     public Image triangle, startBackground;
-    public GameObject blankbg, textUI, settings_ui, startBtn;
+    public GameObject blankbg, textUI, settings_ui, startBtn, main;
 
     private int text_index;
     private bool isTyping = false;
 
+    public void Awake()
+    {
+        //bgm1.volume = PlayerPrefs.GetFloat("backvol", 1);
+    }
+
     public void clickStart()
     {
+        main.SetActive(false);
         startBackground.gameObject.SetActive(true);
         blankbg.SetActive(true);
         startBtn.SetActive(false);
@@ -71,13 +78,13 @@ public class StartScene : MonoBehaviour
     }
 
 
-    public void SoundSlider()
-    {
-        backMusic.volume = backVolume.value;
+    //public void SoundSlider()
+    //{
+    //    bgm.volume = backVolume.value;
 
-        backVol = backVolume.value;
-        PlayerPrefs.SetFloat("backvol", backVol);
-    }
+    //    backVol = backVolume.value;
+    //    PlayerPrefs.SetFloat("backvol", backVol);
+    //}
 
     public void clickSettings()
     {
@@ -87,30 +94,46 @@ public class StartScene : MonoBehaviour
     {
         settings_ui.SetActive(false);
     }
+    IEnumerator Playlist()
+    {
+        soundSource.clip = intro_music[0];
+        soundSource.Play();
+        while (true)
+        {
+            yield return new WaitForSeconds(1.0f);
+            if (!soundSource.isPlaying)
+            {
+                soundSource.clip = intro_music[1];
+                soundSource.Play();
+                soundSource.loop = true;
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        soundSource = GetComponent<AudioSource>();
+        StartCoroutine("Playlist");
         StartCoroutine("triangle_effect");
         introString = new string[]
         { "......",
-        "이 아이, 악몽을 꾸고 있어…나한테는 잘 된 일이야, 악몽을 판다면 값을 높게 부를 수 있으니까!",
-        "중간에 실패만 안 하면, 1000냥은 충분히 벌 수 있다구!",
+        "이 아이, 악몽을 꾸고 있어…\n나처럼 꿈을 사고파는 고양이에게는 놓칠 수 없는 사냥감이지!",
+        "악몽이 왜 값나가는지 알아? 끔찍한 악몽일수록 그 뒤에는 잊지 못할 기억들이 숨어 있거든.",
+        "그런 기억들은 비싸게 거래돼.\n중간에 실수만 안 하면, 1000냥은 충분히 벌 수 있다구!",
         "1000냥이면 폭신폭신한 꿈, 맛있는 음식을 잔뜩 먹는 꿈, 하늘을 나는 꿈, 온갖 좋은 꿈들을 살 수 있어.",
         "고양이는 한 번 목표로 삼은 일은 반드시 이루는 법이지",
-        "오늘이야말로 이 아이의 꿈 속에서 1000냥을 벌고 말겠어!",
-        "어떻게 악몽을 팔아서 돈을 벌 수 있냐고?",
-        "끔찍한 악몽일수록 그 뒤에는 값비싼 기억들이 숨어 있거든. 그런 기억들은 비싸게 거래돼.",
-        "나와 함께 악몽 뒤에 숨은 기억을 찾아보자!"};
+        "오늘이야말로 이 아이의 꿈 속에서 1000냥을 벌고 말겠어!" };
 
         backVol = PlayerPrefs.GetFloat("backvol", 1f);
         backVolume.value = backVol;
-        backMusic.volume = backVolume.value;
+        //bgm1.volume = backVolume.value;
     }
 
     // Update is called once per frame
     void Update()
     {
-        SoundSlider();
+        //SoundSlider();
     }
     public IEnumerator _typing(int index)
     {

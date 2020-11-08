@@ -6,24 +6,29 @@ using UnityEngine.UI;
 
 public class HiddenPicture : MonoBehaviour
 {
+    public AudioSource bgm;
     // 땅을 팔지 말지
     public static int totalMoney = 0;
     public Text moneyText;
     public static int stage = 1; //1, 2, 3
     public static bool[] result = {false, false, false }; // [스테이지 0/1/2] false : 반쪽 true : 완전한사진
     public Image[] resultImages, beforeImages; // <0, 1 : 스테이지 1 반, 완> <2, 3 : 스테이지 2 반, 완> <4, 5 : 스테이지 3 반, 완>
-    public GameObject rippedChoice, perfectChoice, blankbg, moneyObj;
+    public GameObject rippedChoice, perfectChoice, blankbg, moneyObj, howtoplay;
     public Text tx, rippedText, perfectText;
     public Image triangle, Leo;
     public static bool isBefore = true;
     private string[] a_text, b_text; // = {"안녕하세요.", "반갑습니다.", "수고많으십니다."};
-
+    public static bool flag = true;
     private bool isTyping = true;
 
     private int text_index = 0;
 
+    public void Awake()
+    {
+        bgm.volume = PlayerPrefs.GetFloat("backvol", 1);
+    }
 
-    public IEnumerator _typing(int index, string[] m_text)
+        public IEnumerator _typing(int index, string[] m_text)
     {
        isTyping = true;
        yield return new WaitForSeconds(0.5f);
@@ -42,7 +47,7 @@ public class HiddenPicture : MonoBehaviour
         {
             StopAllCoroutines();
             tx.text = a_text[text_index];
-            tx.text = b_text[stage - 1];
+            tx.text = b_text[stage-1];
             isTyping = false;
         }
         else if (isBefore)
@@ -59,7 +64,6 @@ public class HiddenPicture : MonoBehaviour
     public void afterGround()
     {
         moneyObj.SetActive(true);
-        //stage++;
         switch (stage)
         {
             case 1:
@@ -181,13 +185,19 @@ public class HiddenPicture : MonoBehaviour
         switch (stage)
         {
             case 1:
-                SceneManager.LoadScene("SampleScene");
+                isBefore = true;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                //SceneManager.LoadScene("GamePlay1");
                 return;
             case 2:
-                SceneManager.LoadScene("SampleScene");
+                isBefore = true;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                //SceneManager.LoadScene("GamePlay2");
                 return;
             case 3:
-                SceneManager.LoadScene("SampleScene");
+                isBefore = true;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                //SceneManager.LoadScene("GamePlay3");
                 return;
         }
     }
@@ -209,8 +219,18 @@ public class HiddenPicture : MonoBehaviour
         yield return new WaitForSeconds(0.001f);
     }
     // Start is called before the first frame update
+    public void howtoclick()
+    {
+        howtoplay.SetActive(false);
+        flag = false;
+    }
     void Start()
     {
+        if (flag)
+        {
+            howtoplay.SetActive(true);
+            flag = false;
+        }
         moneyText.text = totalMoney.ToString();
         //stage = 1;
         //result = new bool[] { false, };
@@ -259,12 +279,35 @@ public class HiddenPicture : MonoBehaviour
             //StartCoroutine(_typing(text_index));
             afterGround();
         }
+
+        switch (stage)
+        {
+            case 1:
+                if (GameManager.starPoint == 2)
+                    result[0] = true;
+                return;
+            case 2:
+                if (GameManager.starPoint == 2)
+                    result[1] = true;
+                return;
+            case 3:
+                if (GameManager.starPoint == 2)
+                    result[2] = true;
+                return;
+        }
     }
     public void clickBlank()
     {
-        //SceneManager.LoadScene("SampleScene");
-        //isBefore = !isBefore;
+        //if (stage == 4)
+        //{
+        //    SceneManager.LoadScene("EndScene");
+        //}
+
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        //isBefore = !isBefore;
+
+       
+        
         if (!isBefore)
         {
             if (stage == 4)
@@ -280,15 +323,18 @@ public class HiddenPicture : MonoBehaviour
             switch (stage)
             {
                 case 1:
+                    SceneManager.LoadScene("GamePlay1");
                     return;
                 case 2:
+                    SceneManager.LoadScene("GamePlay2");
                     return;
                 case 3:
+                    SceneManager.LoadScene("GamePlay3");
                     return;
             }
             isBefore = !isBefore;
         }        
-
+        
         //beforeImages[stage - 1].gameObject.SetActive(false);
         //Leo.gameObject.SetActive(false);
     }
@@ -309,17 +355,11 @@ public class HiddenPicture : MonoBehaviour
         }
     }
     IEnumerator Count(float target, float current)
-
     {
-
-        float duration = 0.5f; // 카운팅에 걸리는 시간 설정. 
-
+        float duration = 0.5f; // 카운팅에 걸리는 시간 설정.
         float offset = (target - current) / duration; // 
-
-
-
+        
         while (current < target)
-
         {
             current += offset * Time.deltaTime;
             moneyText.text = ((int)current).ToString();

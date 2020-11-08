@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EndingScene : MonoBehaviour
 {
+    public AudioSource bgmA, bgmB;
     public Image Leo, Leo_disable;
     public GameObject Lisa, Lisa_disable;
     public string[] AString, ALeoString, BString;
@@ -13,7 +15,7 @@ public class EndingScene : MonoBehaviour
     public Image AStart, BStart, Abg, Bbg;
     public bool[] whoTalk;
 
-    private bool isTyping = false, isStart = true, ending = true; //HiddenPicture.totalMoney >= 1000; // true = A, false = B
+    private bool isTyping = false, isStart = true, ending = HiddenPicture.totalMoney >= 1000; // true = A, false = B
     private int text_index;
     public GameObject blankbg, textUI;
 
@@ -48,12 +50,13 @@ public class EndingScene : MonoBehaviour
             Lisa.SetActive(false);
             //Abg.gameObject.SetActive(true);
             StartCoroutine(display(Abg));
+            StartCoroutine(goToMain(0));
         }
         else if (!isTyping)
         {
             if (text_index == 4)
             {
-                Leo.gameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
+                Leo.gameObject.transform.localPosition = new Vector3(540f, -55f, 0f);
                 Lisa.gameObject.SetActive(true);
                 //StartCoroutine(displayL(Lisa));
                 Leo.gameObject.SetActive(false);
@@ -99,13 +102,29 @@ public class EndingScene : MonoBehaviour
             //Leo.gameObject.SetActive(
             StartCoroutine(fadeOut(Leo));
             StartCoroutine(display(Bbg));
+            StartCoroutine(goToMain(1));
         }
         else
         {
             StartCoroutine(_typing(++text_index, BString));
         }
     }
-
+    IEnumerator goToMain(int ab)
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (ab == 0)
+        {
+            yield return new WaitForSeconds(0.5f);
+            StartCoroutine(fadeOut(Abg));
+            yield return new WaitForSeconds(0.5f);
+            SceneManager.LoadScene("StartScene");
+        }
+        else
+        {
+            yield return new WaitForSeconds(0.5f);
+            SceneManager.LoadScene("StartScene");
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -140,11 +159,13 @@ public class EndingScene : MonoBehaviour
         };
         if (ending)//(HiddenPicture.totalMoney > 1000)
         {
+            bgmA.Play();
             StartCoroutine(display(AStart));
             AEnding();
         }
         else
         {
+            bgmB.Play();
             StartCoroutine(display(BStart));
             BEnding();
         }

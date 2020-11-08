@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public int starPoint;
+    public static int starPoint;
     public GameObject star1;
     public GameObject star2;
     public Text ScriptTxt;
@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
         if (where.Equals("return"))
         {
             // 메인화면으로
+            HiddenPicture.isBefore = true;
+            SceneManager.LoadScene("HiddenPictureScene");
         }
         else if (where.Equals("continue"))
         {
