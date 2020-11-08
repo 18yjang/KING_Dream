@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     public GameObject star2;
     public Text ScriptTxt;
 
+
     void Start()
     {
         starPoint = 0;
@@ -46,7 +47,10 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        
+        if(starPoint == 2)
+        {
+            SceneManager.LoadScene("HiddenPictureScene");
+        }
     }
 
     public void OnStarTouch(int starNum)
@@ -54,9 +58,9 @@ public class GameManager : MonoBehaviour
         starPoint++;
         ScriptTxt.GetComponent<Text>().text = starPoint.ToString();
         if (starNum == 1)
-            Destroy(star1);
+            star1.SetActive(false);
         else
-            Destroy(star2);
+            star2.SetActive(false);
 
 
 
@@ -67,14 +71,20 @@ public class GameManager : MonoBehaviour
     {
         if (where.Equals("return"))
         {
+            Debug.Log("메인");
             // 메인화면으로
         }
         else if (where.Equals("continue"))
         {
+            Debug.Log("재시도");
             // 같은 씬 재로딩
-            SceneManager.LoadScene("GamePlay1");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             Time.timeScale = 1;
 
+        }
+        else if (where.Equals("goon"))
+        {
+            SceneManager.LoadScene("HiddenPictureScene");
         }
     }
 }

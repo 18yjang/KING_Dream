@@ -7,10 +7,11 @@ public class RectTrans : MonoBehaviour
 {
     Transform vec;
     DrawLine drawLine;
+    public GameObject Image;
 
     void Start()
     {
-       // vec = new Vector2(0,0);
+        Image = Resources.Load("Prefab/Image") as GameObject;
     }
 
     
@@ -19,12 +20,15 @@ public class RectTrans : MonoBehaviour
         //CreateBox();
     }
 
-    public void CreateImage()
+    public void CreateImage(Vector2 location, float xLen, float yLen)
     {
-        GameObject img = Instantiate((GameObject)Resources.Load("Prefab/Image"));
-        img.transform.localPosition = new Vector2(300, 500);
-        img.GetComponent<Transform>().SetParent(GameObject.Find("Canvas/BackGround").GetComponent<Transform>());
-        img.GetComponent<Transform>().localScale = new Vector2(50, 50);
+        
+        //GameObject img = Instantiate(Image);
+        Instantiate(Image, location, Quaternion.identity);
+        
+        //img.transform.localPosition = location;
+        //img.GetComponent<Transform>().SetParent(GameObject.Find("Hidden").GetComponent<Transform>());
+        Image.GetComponent<Transform>().localScale = new Vector2(xLen, yLen);
 
 
         //GameObject box = Instantiate(Resources.Load("Prefab/Image"), drawLine.colliderpoints[2], Quaternion.identity) as GameObject;

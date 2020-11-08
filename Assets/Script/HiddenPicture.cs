@@ -9,13 +9,13 @@ public class HiddenPicture : MonoBehaviour
     // 땅을 팔지 말지
     public static int totalMoney = 0;
     public Text moneyText;
-    public int stage; //1, 2, 3
-    public bool[] result; // [스테이지 0/1/2] false : 반쪽 true : 완전한사진
+    public static int stage = 1; //1, 2, 3
+    public static bool[] result = {false, false, false }; // [스테이지 0/1/2] false : 반쪽 true : 완전한사진
     public Image[] resultImages, beforeImages; // <0, 1 : 스테이지 1 반, 완> <2, 3 : 스테이지 2 반, 완> <4, 5 : 스테이지 3 반, 완>
-    public GameObject rippedChoice, perfectChoice, blankbg;
+    public GameObject rippedChoice, perfectChoice, blankbg, moneyObj;
     public Text tx, rippedText, perfectText;
     public Image triangle, Leo;
-    public bool isBefore = true;
+    public static bool isBefore = true;
     private string[] a_text, b_text; // = {"안녕하세요.", "반갑습니다.", "수고많으십니다."};
 
     private bool isTyping = true;
@@ -33,6 +33,7 @@ public class HiddenPicture : MonoBehaviour
             yield return new WaitForSeconds(0.15f);
         }
         isTyping = false;
+        tx.text = "";
     }
 
     public void clickTextBox()
@@ -57,20 +58,22 @@ public class HiddenPicture : MonoBehaviour
 
     public void afterGround()
     {
+        moneyObj.SetActive(true);
         //stage++;
         switch (stage)
         {
             case 1:
+                //isBefore = true;
                 if (result[0]) //완전한 사진
                 {
-                    perfectText.text = "200냥에\n팔자!";
+                    perfectText.text = "200냥에 팔자!";
                     StartCoroutine(displayResult(resultImages[1]));
                     StartCoroutine(_typing(1, a_text));
                     perfectChoice.SetActive(true);
                 }
                 else // 반쪽
                 {
-                    rippedText.text = "100냥에\n팔자!";
+                    rippedText.text = "100냥에 팔자!";
                     StartCoroutine(displayResult(resultImages[0]));
                     StartCoroutine(_typing(0, a_text));
                     rippedChoice.SetActive(true);                    
@@ -79,14 +82,14 @@ public class HiddenPicture : MonoBehaviour
             case 2:
                 if (result[1]) //완전한 사진
                 {
-                    perfectText.text = "500냥에\n팔자!";
+                    perfectText.text = "500냥에 팔자!";
                     StartCoroutine(displayResult(resultImages[3]));
                     StartCoroutine(_typing(3, a_text));
                     perfectChoice.SetActive(true);
                 }
                 else // 반쪽
                 {
-                    rippedText.text = "250냥에\n팔자!";
+                    rippedText.text = "250냥에 팔자!";
                     StartCoroutine(displayResult(resultImages[2]));
                     StartCoroutine(_typing(2, a_text));
                     rippedChoice.SetActive(true);
@@ -95,63 +98,79 @@ public class HiddenPicture : MonoBehaviour
             case 3:
                 if (result[2]) //완전한 사진
                 {
-                    perfectText.text = "700냥에\n팔자!";
+                    perfectText.text = "700냥에 팔자!";
                     StartCoroutine(displayResult(resultImages[5]));
                     StartCoroutine(_typing(5, a_text));
                     perfectChoice.SetActive(true);
-                    StartCoroutine(goToEnding());
+                    //StartCoroutine(goToEnding());
                 }
                 else // 반쪽
                 {
-                    rippedText.text = "350냥에\n팔자!";
+                    rippedText.text = "350냥에 팔자!";
                     StartCoroutine(displayResult(resultImages[4]));
                     StartCoroutine(_typing(4, a_text));
                     rippedChoice.SetActive(true);
-                    StartCoroutine(goToEnding());
+                    //StartCoroutine(goToEnding());
                 }
                 return;
         }
     }
     public void sellClick()
     {
-        rippedChoice.SetActive(false);
-        perfectChoice.SetActive(false);
+        //moneyObj.SetActive(false);
+        //rippedChoice.SetActive(false);
+        //perfectChoice.SetActive(false);
         switch (stage)
         {
             case 1:
+                stage++;
                 if (result[0])
                 {
                     StartCoroutine(Count(200, totalMoney));
                     totalMoney += 200;
+                    blankbg.SetActive(true);
+                    //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 }
                 else
                 {
                     StartCoroutine(Count(100, totalMoney));
                     totalMoney += 100;
+                    blankbg.SetActive(true);
+                    //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 }
                 return;
             case 2:
+                stage++;
                 if (result[0])
                 {
                     StartCoroutine(Count(500, totalMoney));
                     totalMoney += 500;
+                    blankbg.SetActive(true);
+                    //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 }
                 else
                 {
                     StartCoroutine(Count(250, totalMoney));
                     totalMoney += 250;
+                    blankbg.SetActive(true);
+                    //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
                 }
                 return;
             case 3:
+                stage++;
                 if (result[0])
                 {
                     StartCoroutine(Count(700, totalMoney));
                     totalMoney += 700;
+                    blankbg.SetActive(true);
+                    //StartCoroutine(goToEnding());
                 }
                 else
                 {
                     StartCoroutine(Count(350, totalMoney));
                     totalMoney += 350;
+                    blankbg.SetActive(true);
+                    //StartCoroutine(goToEnding());
                 }
                 return;
         }
@@ -193,8 +212,8 @@ public class HiddenPicture : MonoBehaviour
     void Start()
     {
         moneyText.text = totalMoney.ToString();
-        stage = 1;
-        result = new bool[] { false, };
+        //stage = 1;
+        //result = new bool[] { false, };
 
         a_text = new string[]
             {
@@ -243,7 +262,33 @@ public class HiddenPicture : MonoBehaviour
     }
     public void clickBlank()
     {
-        SceneManager.LoadScene("SampleScene");
+        //SceneManager.LoadScene("SampleScene");
+        //isBefore = !isBefore;
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        if (!isBefore)
+        {
+            if (stage == 4)
+            {
+                SceneManager.LoadScene("EndScene");
+            }
+
+            isBefore = !isBefore;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        else
+        {
+            switch (stage)
+            {
+                case 1:
+                    return;
+                case 2:
+                    return;
+                case 3:
+                    return;
+            }
+            isBefore = !isBefore;
+        }        
+
         //beforeImages[stage - 1].gameObject.SetActive(false);
         //Leo.gameObject.SetActive(false);
     }

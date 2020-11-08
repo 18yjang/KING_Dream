@@ -10,10 +10,10 @@ public class EndingScene : MonoBehaviour
     public string[] AString, ALeoString, BString;
     public Text nameText, endText;
     public Image triangle;
-    public Image AStart, BStart;
+    public Image AStart, BStart, Abg, Bbg;
     public bool[] whoTalk;
 
-    private bool isTyping = false, isStart = true, ending = true; // true = A, false = B
+    private bool isTyping = false, isStart = true, ending = true; //HiddenPicture.totalMoney >= 1000; // true = A, false = B
     private int text_index;
     public GameObject blankbg, textUI;
 
@@ -45,6 +45,9 @@ public class EndingScene : MonoBehaviour
         {
             textUI.SetActive(false);
             StartCoroutine(fadeOut(Leo));
+            Lisa.SetActive(false);
+            //Abg.gameObject.SetActive(true);
+            StartCoroutine(display(Abg));
         }
         else if (!isTyping)
         {
@@ -93,7 +96,9 @@ public class EndingScene : MonoBehaviour
         else if (text_index == BString.Length - 1)
         {
             textUI.SetActive(false);
+            //Leo.gameObject.SetActive(
             StartCoroutine(fadeOut(Leo));
+            StartCoroutine(display(Bbg));
         }
         else
         {
@@ -210,7 +215,7 @@ public class EndingScene : MonoBehaviour
             yield return new WaitForSeconds(0);
         }
         character.gameObject.SetActive(false);
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(1f);
         if (isStart)
         {
             StartCoroutine(display(Leo));
